@@ -1,0 +1,35 @@
+<!-- rentals/templates/rentals/login.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login - Game Zone</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+    <div class="bg-white p-8 rounded-xl shadow-lg w-full max-w-md">
+        <h2 class="text-2xl font-bold mb-6 text-center text-blue-600">Login to Game Zone</h2>
+        <form method="post" class="space-y-4">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Username</label>
+                {{ form.username|add_class:"w-full p-2 border border-gray-300 rounded-md" }}
+                {{ form.username.errors }}
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Password</label>
+                {{ form.password|add_class:"w-full p-2 border border-gray-300 rounded-md" }}
+                {{ form.password.errors }}
+            </div>
+            <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-md transition">
+                Login
+            </button>
+        </form>
+        <p class="text-sm mt-4 text-center">
+            Don't have an account? 
+            <a href="{% url 'signup' %}" class="text-blue-500 hover:underline">Sign up</a>
+        </p>
+    </div>
+</body>
+</html>
