@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+
+{% block title %}Check Your Email - GameZone{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <!-- Background Animation -->
+    <div class="absolute inset-0 overflow-hidden">
+        <div class="absolute -top-40 -right-40 w-80 h-80 rounded-full bg-purple-600 opacity-20 animate-pulse"></div>
+        <div class="absolute -bottom-40 -left-40 w-80 h-80 rounded-full bg-blue-600 opacity-20 animate-pulse animation-delay-1000"></div>
+    </div>
+
+    <div class="relative max-w-lg w-full">
+        <div class="bg-white/10 backdrop-blur-md rounded-2xl shadow-2xl p-8 border border-white/20 text-center">
+            <!-- Success Icon -->
+            <div class="mx-auto h-20 w-20 flex items-center justify-center rounded-full bg-gradient-to-r from-green-400 to-blue-500 shadow-lg mb-6">
+                <svg class="h-10 w-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                </svg>
+            </div>
+
+            <h2 class="text-3xl font-extrabold text-white mb-4">
+                🎉 Almost There!
+            </h2>
+            
+            <p class="text-lg text-gray-200 mb-6">
+                We've sent a verification email to your inbox
+            </p>
+
+            <!-- Email Address Display -->
+            {% if user.email %}
+            <div class="bg-white/10 rounded-lg p-4 mb-6">
+                <p class="text-sm text-gray-300 mb-1">Verification email sent to:</p>
+                <p class="text-lg font-semibold text-white">{{ user.email }}</p>
+            </div>
+            {% endif %}
+
+            <!-- Instructions -->
+            <div class="text-left bg-white/5 rounded-lg p-6 mb-6">
+                <h3 class="text-lg font-semibold text-white mb-4">📧 What to do next:</h3>
+                <ol class="space-y-3 text-sm text-gray-200">
+                    <li class="flex items-start">
+                        <span class="flex-shrink-0 w-6 h-6 bg-purple-500 text-white rounded-full flex items-center justify-center text-xs font-bold mr-3 mt-0.5">1</span>
+                        <span>Check your email inbox (and spam folder)</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="flex-shrink-0 w-6 h-6 bg-purple-500 text-white rounded-full flex items-center justify-center text-xs font-bold mr-3 mt-0.5">2</span>
+                        <span>Look for an email from GameZone with your verification link</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="flex-shrink-0 w-6 h-6 bg-purple-500 text-white rounded-full flex items-center justify-center text-xs font-bold mr-3 mt-0.5">3</span>
+                        <span>Click the verification link to activate your account</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="flex-shrink-0 w-6 h-6 bg-purple-500 text-white rounded-full flex items-center justify-center text-xs font-bold mr-3 mt-0.5">4</span>
+                        <span>Start exploring GameZone!</span>
+                    </li>
+                </ol>
+            </div>
+
+            <!-- Development Mode Notice -->
+            <div class="bg-yellow-500/20 border border-yellow-400/30 rounded-lg p-4 mb-6">
+                <div class="flex items-center">
+                    <svg class="h-5 w-5 text-yellow-300 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                    </svg>
+                    <div>
+                        <h4 class="text-sm font-medium text-yellow-200">Development Mode</h4>
+                        <p class="text-xs text-yellow-300 mt-1">
+                            The verification email is printed in your terminal/console. Check there for the verification link!
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="space-y-3">
+                <button onclick="checkEmail()" class="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-medium py-3 px-6 rounded-lg transition-all duration-300 transform hover:scale-105">
+                    ✓ I've Verified My Email
+                </button>
+                
+                <form action="{% url 'resend_verification' %}" method="post" class="w-full">
+                    {% csrf_token %}
+                    <button type="submit" class="w-full border border-white/30 text-white hover:bg-white/10 font-medium py-3 px-6 rounded-lg transition-all duration-300">
+                        📤 Resend Verification Email
+                    </button>
+                </form>
+            </div>
+
+            <!-- Help -->
+            <div class="mt-6 pt-6 border-t border-white/20">
+                <p class="text-sm text-gray-300">
+                    Need help? 
+                    <a href="mailto:support@gamezone.com" class="text-purple-400 hover:text-purple-300 font-medium">
+                        Contact Support
+                    </a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function checkEmail() {
+    window.location.href = "{% url 'account_login' %}";
+}
+
+// Auto-refresh page after 30 seconds to check if user verified
+setTimeout(function() {
+    if (confirm("Want to refresh the page to check if you've verified your email?")) {
+        window.location.reload();
+    }
+}, 30000);
+</script>
+
+<style>
+.animation-delay-1000 {
+    animation-delay: 1s;
+}
+</style>
+{% endblock %}

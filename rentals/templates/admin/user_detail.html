@@ -1,0 +1,177 @@
+{% extends 'admin/base.html' %}
+
+{% block page_title %}User Details{% endblock %}
+{% block page_description %}Manage individual user account{% endblock %}
+
+{% block content %}
+<div class="p-6">
+    <!-- User Info Card -->
+    <div class="bg-white shadow rounded-lg p-6 mb-6">
+        <div class="flex items-center justify-between mb-6">
+            <div class="flex items-center">
+                <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center">
+                    <span class="text-white text-xl font-medium">{{ user_obj.username|first|upper }}</span>
+                </div>
+                <div class="ml-6">
+                    <h1 class="text-2xl font-bold text-gray-900">{{ user_obj.username }}</h1>
+                    <p class="text-gray-600">{{ user_obj.first_name }} {{ user_obj.last_name }}</p>
+                    <p class="text-gray-500">{{ user_obj.email }}</p>
+                </div>
+            </div>
+            <div class="flex space-x-2">
+                <form method="POST" class="inline">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="toggle_active">
+                    <button type="submit" class="px-4 py-2 {% if user_obj.is_active %}bg-red-600 hover:bg-red-700{% else %}bg-green-600 hover:bg-green-700{% endif %} text-white rounded-md transition-colors">
+                        {% if user_obj.is_active %}Deactivate{% else %}Activate{% endif %}
+                    </button>
+                </form>
+                {% if request.user.is_superuser %}
+                <form method="POST" class="inline">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="toggle_staff">
+                    <button type="submit" class="px-4 py-2 {% if user_obj.is_staff %}bg-orange-600 hover:bg-orange-700{% else %}bg-blue-600 hover:bg-blue-700{% endif %} text-white rounded-md transition-colors">
+                        {% if user_obj.is_staff %}Remove Staff{% else %}Make Staff{% endif %}
+                    </button>
+                </form>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- User Stats -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div class="bg-gray-50 p-4 rounded-lg">
+                <div class="text-2xl font-bold text-gray-900">{{ user_equipment.count }}</div>
+                <div class="text-sm text-gray-500">Equipment Listed</div>
+            </div>
+            <div class="bg-gray-50 p-4 rounded-lg">
+                <div class="text-2xl font-bold text-gray-900">{{ user_rentals_as_renter.count }}</div>
+                <div class="text-sm text-gray-500">Rentals Made</div>
+            </div>
+            <div class="bg-gray-50 p-4 rounded-lg">
+                <div class="text-2xl font-bold text-gray-900">${{ total_earned|default:0 }}</div>
+                <div class="text-sm text-gray-500">Total Earned</div>
+            </div>
+            <div class="bg-gray-50 p-4 rounded-lg">
+                <div class="text-2xl font-bold text-gray-900">${{ total_spent|default:0 }}</div>
+                <div class="text-sm text-gray-500">Total Spent</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="bg-white shadow rounded-lg">
+        <div class="border-b border-gray-200">
+            <nav class="-mb-px flex">
+                <button class="tab-button active px-6 py-3 text-sm font-medium border-b-2 border-admin-500 text-admin-600" data-tab="equipment">
+                    Equipment ({{ user_equipment.count }})
+                </button>
+                <button class="tab-button px-6 py-3 text-sm font-medium border-b-2 border-transparent text-gray-500 hover:text-gray-700" data-tab="rentals">
+                    Rentals ({{ user_rentals_as_renter.count }})
+                </button>
+                <button class="tab-button px-6 py-3 text-sm font-medium border-b-2 border-transparent text-gray-500 hover:text-gray-700" data-tab="earnings">
+                    Earnings
+                </button>
+            </nav>
+        </div>
+        
+        <!-- Equipment Tab -->
+        <div id="equipment-tab" class="tab-content p-6">
+            <h3 class="text-lg font-semibold mb-4">User's Equipment</h3>
+            <div class="space-y-4">
+                {% for equipment in user_equipment %}
+                <div class="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+                    <div>
+                        <h4 class="font-medium">{{ equipment.title }}</h4>
+                        <p class="text-sm text-gray-500">{{ equipment.brand }} {{ equipment.model }}</p>
+                        <p class="text-sm text-gray-500">${{ equipment.daily_rate }}/day</p>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium 
+                            {% if equipment.status == 'active' %}bg-green-100 text-green-800
+                            {% elif equipment.status == 'pending' %}bg-yellow-100 text-yellow-800
+                            {% else %}bg-gray-100 text-gray-800{% endif %}">
+                            {{ equipment.status|title }}
+                        </span>
+                        <a href="{% url 'admin_equipment_detail' equipment.id %}" class="text-admin-600 hover:text-admin-800">View</a>
+                    </div>
+                </div>
+                {% empty %}
+                <p class="text-gray-500">No equipment listed</p>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <!-- Rentals Tab -->
+        <div id="rentals-tab" class="tab-content p-6 hidden">
+            <h3 class="text-lg font-semibold mb-4">User's Rentals</h3>
+            <div class="space-y-4">
+                {% for rental in user_rentals_as_renter %}
+                <div class="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+                    <div>
+                        <h4 class="font-medium">{{ rental.equipment.title }}</h4>
+                        <p class="text-sm text-gray-500">{{ rental.start_date }} - {{ rental.end_date }}</p>
+                        <p class="text-sm text-gray-500">${{ rental.total_amount }}</p>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium 
+                            {% if rental.status == 'completed' %}bg-green-100 text-green-800
+                            {% elif rental.status == 'active' %}bg-blue-100 text-blue-800
+                            {% else %}bg-gray-100 text-gray-800{% endif %}">
+                            {{ rental.status|title }}
+                        </span>
+                        <a href="{% url 'admin_rental_detail' rental.id %}" class="text-admin-600 hover:text-admin-800">View</a>
+                    </div>
+                </div>
+                {% empty %}
+                <p class="text-gray-500">No rentals made</p>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <!-- Earnings Tab -->
+        <div id="earnings-tab" class="tab-content p-6 hidden">
+            <h3 class="text-lg font-semibold mb-4">Earnings Overview</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-gray-50 p-4 rounded-lg">
+                    <h4 class="font-medium mb-2">As Equipment Owner</h4>
+                    <p class="text-2xl font-bold text-green-600">${{ total_earned|default:0 }}</p>
+                    <p class="text-sm text-gray-500">{{ user_rentals_as_owner.count }} rentals</p>
+                </div>
+                <div class="bg-gray-50 p-4 rounded-lg">
+                    <h4 class="font-medium mb-2">As Renter</h4>
+                    <p class="text-2xl font-bold text-blue-600">${{ total_spent|default:0 }}</p>
+                    <p class="text-sm text-gray-500">{{ user_rentals_as_renter.count }} rentals</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const tabButtons = document.querySelectorAll('.tab-button');
+    const tabContents = document.querySelectorAll('.tab-content');
+    
+    tabButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const tabName = button.getAttribute('data-tab');
+            
+            // Remove active class from all buttons and contents
+            tabButtons.forEach(btn => {
+                btn.classList.remove('active', 'border-admin-500', 'text-admin-600');
+                btn.classList.add('border-transparent', 'text-gray-500');
+            });
+            tabContents.forEach(content => content.classList.add('hidden'));
+            
+            // Add active class to clicked button and show corresponding content
+            button.classList.add('active', 'border-admin-500', 'text-admin-600');
+            button.classList.remove('border-transparent', 'text-gray-500');
+            document.getElementById(tabName + '-tab').classList.remove('hidden');
+        });
+    });
+});
+</script>
+{% endblock %}

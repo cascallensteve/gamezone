@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Profile Settings{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50 py-12">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="bg-white shadow rounded-lg">
+            <div class="px-4 py-5 sm:p-6">
+                <div class="border-b border-gray-200 pb-4 mb-6">
+                    <h2 class="text-2xl font-bold text-gray-900">Profile Settings</h2>
+                    <p class="mt-1 text-sm text-gray-600">Manage your account information and preferences</p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- Profile Information -->
+                    <div class="space-y-6">
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <h3 class="text-lg font-medium text-gray-900 mb-3">Account Information</h3>
+                            <div class="space-y-2">
+                                <p><span class="font-medium">Email:</span> {{ user.email }}</p>
+                                <p><span class="font-medium">Username:</span> {{ user.username }}</p>
+                                <p><span class="font-medium">Current Role:</span> 
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+                                        {% if user.role == 'customer' %}bg-blue-100 text-blue-800
+                                        {% elif user.role == 'vendor' %}bg-green-100 text-green-800
+                                        {% else %}bg-purple-100 text-purple-800{% endif %}">
+                                        {{ user.get_role_display }}
+                                    </span>
+                                </p>
+                                <p><span class="font-medium">Email Verified:</span> 
+                                    {% if user.is_email_verified %}
+                                        <span class="text-green-600">✓ Verified</span>
+                                    {% else %}
+                                        <span class="text-red-600">✗ Not Verified</span>
+                                        <a href="{% url 'resend_verification' %}" class="ml-2 text-blue-600 hover:text-blue-800">Resend</a>
+                                    {% endif %}
+                                </p>
+                                <p><span class="font-medium">Member Since:</span> {{ user.date_joined|date:"F d, Y" }}</p>
+                            </div>
+                        </div>
+
+                        <!-- Update Profile Form -->
+                        <div>
+                            <form method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="update_profile" value="1">
+                                {% crispy form %}
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Role Management -->
+                    <div class="space-y-6">
+                        <!-- Change Role Form -->
+                        <div>
+                            <form method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="change_role" value="1">
+                                {% crispy role_form %}
+                            </form>
+                        </div>
+
+                        <!-- Quick Actions -->
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <h3 class="text-lg font-medium text-gray-900 mb-3">Quick Actions</h3>
+                            <div class="space-y-3">
+                                <a href="{% url 'dashboard' %}" 
+                                   class="block w-full text-center bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors">
+                                    Go to Dashboard
+                                </a>
+                                <a href="{% url 'account_change_password' %}" 
+                                   class="block w-full text-center bg-gray-600 text-white py-2 px-4 rounded-lg hover:bg-gray-700 transition-colors">
+                                    Change Password
+                                </a>
+                                {% if not user.is_email_verified %}
+                                <a href="{% url 'resend_verification' %}" 
+                                   class="block w-full text-center bg-orange-600 text-white py-2 px-4 rounded-lg hover:bg-orange-700 transition-colors">
+                                    Verify Email
+                                </a>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Role Benefits -->
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <h3 class="text-lg font-medium text-gray-900 mb-3">Role Benefits</h3>
+                            {% if user.is_customer %}
+                            <div class="text-sm text-gray-600">
+                                <p class="font-medium text-blue-600 mb-2">Customer Benefits:</p>
+                                <ul class="list-disc list-inside space-y-1">
+                                    <li>Browse and rent gaming equipment</li>
+                                    <li>Manage rental history</li>
+                                    <li>Save favorite items to wishlist</li>
+                                    <li>Rate and review equipment</li>
+                                </ul>
+                            </div>
+                            {% elif user.is_vendor %}
+                            <div class="text-sm text-gray-600">
+                                <p class="font-medium text-green-600 mb-2">Vendor Benefits:</p>
+                                <ul class="list-disc list-inside space-y-1">
+                                    <li>List your gaming equipment for rent</li>
+                                    <li>Manage rental requests</li>
+                                    <li>Track earnings and analytics</li>
+                                    <li>Build your reputation</li>
+                                </ul>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

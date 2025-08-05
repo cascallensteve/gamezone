@@ -1,0 +1,357 @@
+{% extends 'admin/base.html' %}
+
+{% block page_title %}Admin Dashboard{% endblock %}
+{% block page_description %}Overview of your GameZone platform{% endblock %}
+
+{% block content %}
+<div class="p-6">
+    <!-- Statistics Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <!-- Total Users -->
+        <div class="bg-white overflow-hidden shadow-lg rounded-2xl border border-gray-200">
+            <div class="p-6">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center">
+                            <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="ml-5 w-0 flex-1">
+                        <dl>
+                            <dt class="text-sm font-medium text-gray-500 truncate">Total Users</dt>
+                            <dd class="text-3xl font-bold text-gray-900">{{ total_users|default:0 }}</dd>
+                            <dd class="text-sm text-blue-600 font-medium">+{{ new_users_30d|default:0 }} this month</dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Total Equipment -->
+        <div class="bg-white overflow-hidden shadow-lg rounded-2xl border border-gray-200">
+            <div class="p-6">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <div class="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center">
+                            <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="ml-5 w-0 flex-1">
+                        <dl>
+                            <dt class="text-sm font-medium text-gray-500 truncate">Total Equipment</dt>
+                            <dd class="text-3xl font-bold text-gray-900">{{ total_equipment|default:0 }}</dd>
+                            <dd class="text-sm text-green-600 font-medium">{{ active_equipment|default:0 }} active</dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Total Rentals -->
+        <div class="bg-white overflow-hidden shadow-lg rounded-2xl border border-gray-200">
+            <div class="p-6">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <div class="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center">
+                            <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3a4 4 0 118 0v4m-8 0h16l-1.5 9H9.5L8 7z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="ml-5 w-0 flex-1">
+                        <dl>
+                            <dt class="text-sm font-medium text-gray-500 truncate">Total Rentals</dt>
+                            <dd class="text-3xl font-bold text-gray-900">{{ total_rentals|default:0 }}</dd>
+                            <dd class="text-sm text-purple-600 font-medium">{{ active_rentals|default:0 }} active</dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Total Revenue -->
+        <div class="bg-white overflow-hidden shadow-lg rounded-2xl border border-gray-200">
+            <div class="p-6">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <div class="w-12 h-12 bg-gradient-to-br from-yellow-500 to-yellow-600 rounded-xl flex items-center justify-center">
+                            <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="ml-5 w-0 flex-1">
+                        <dl>
+                            <dt class="text-sm font-medium text-gray-500 truncate">Total Revenue</dt>
+                            <dd class="text-3xl font-bold text-gray-900">${{ total_revenue|default:0|floatformat:0 }}</dd>
+                            <dd class="text-sm text-yellow-600 font-medium">${{ monthly_revenue|default:0|floatformat:0 }} this month</dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts and Tables -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+        <!-- User Growth Chart -->
+        <div class="bg-white shadow-lg rounded-2xl border border-gray-200">
+            <div class="px-6 py-5 border-b border-gray-200">
+                <h3 class="text-lg font-semibold text-gray-900">User Growth (Last 30 Days)</h3>
+            </div>
+            <div class="p-6">
+                <canvas id="userGrowthChart" width="400" height="200"></canvas>
+            </div>
+        </div>
+
+        <!-- Equipment by Category -->
+        <div class="bg-white shadow-lg rounded-2xl border border-gray-200">
+            <div class="px-6 py-5 border-b border-gray-200">
+                <h3 class="text-lg font-semibold text-gray-900">Equipment by Category</h3>
+            </div>
+            <div class="p-6">
+                <canvas id="categoryChart" width="400" height="200"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity Tables -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Recent Users -->
+        <div class="bg-white shadow-lg rounded-2xl border border-gray-200">
+            <div class="px-6 py-5 border-b border-gray-200">
+                <h3 class="text-lg font-semibold text-gray-900 flex items-center">
+                    <svg class="w-5 h-5 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
+                    </svg>
+                    Recent Users
+                </h3>
+            </div>
+            <div class="p-6">
+                <div class="space-y-3">
+                    {% for user in recent_users %}
+                    <div class="flex items-center space-x-3">
+                        <div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center">
+                            <span class="text-white text-sm font-medium">{{ user.username|first|upper }}</span>
+                        </div>
+                        <div class="flex-1">
+                            <p class="text-sm font-medium text-gray-900">{{ user.username }}</p>
+                            <p class="text-xs text-gray-500">{{ user.date_joined|timesince }} ago</p>
+                        </div>
+                        <a href="{% url 'admin_user_detail' user.id %}" class="text-blue-600 hover:text-blue-700 text-sm">View</a>
+                    </div>
+                    {% empty %}
+                    <p class="text-gray-500 text-sm">No recent users</p>
+                    {% endfor %}
+                </div>
+                <div class="mt-4">
+                    <a href="{% url 'admin_users' %}" class="text-sm font-medium text-blue-600 hover:text-blue-700">View all users →</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Equipment -->
+        <div class="bg-white shadow-lg rounded-2xl border border-gray-200">
+            <div class="px-6 py-5 border-b border-gray-200">
+                <h3 class="text-lg font-semibold text-gray-900 flex items-center">
+                    <svg class="w-5 h-5 mr-2 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                    </svg>
+                    Recent Equipment
+                </h3>
+            </div>
+            <div class="p-6">
+                <div class="space-y-3">
+                    {% for equipment in recent_equipment %}
+                    <div class="flex items-start space-x-3">
+                        <div class="w-8 h-8 bg-gradient-to-br from-green-500 to-green-600 rounded-lg flex items-center justify-center">
+                            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                            </svg>
+                        </div>
+                        <div class="flex-1">
+                            <p class="text-sm font-medium text-gray-900">{{ equipment.title|truncatechars:30 }}</p>
+                            <p class="text-xs text-gray-500">by {{ equipment.owner.username }}</p>
+                            <p class="text-xs text-gray-500">{{ equipment.created_at|timesince }} ago</p>
+                        </div>
+                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium 
+                            {% if equipment.status == 'active' %}bg-green-100 text-green-800
+                            {% elif equipment.status == 'pending' %}bg-yellow-100 text-yellow-800
+                            {% else %}bg-gray-100 text-gray-800{% endif %}">
+                            {{ equipment.status|title }}
+                        </span>
+                    </div>
+                    {% empty %}
+                    <p class="text-gray-500 text-sm">No recent equipment</p>
+                    {% endfor %}
+                </div>
+                <div class="mt-4">
+                    <a href="{% url 'admin_equipment' %}" class="text-sm font-medium text-green-600 hover:text-green-700">View all equipment →</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Rentals -->
+        <div class="bg-white shadow-lg rounded-2xl border border-gray-200">
+            <div class="px-6 py-5 border-b border-gray-200">
+                <h3 class="text-lg font-semibold text-gray-900 flex items-center">
+                    <svg class="w-5 h-5 mr-2 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3a4 4 0 118 0v4m-8 0h16l-1.5 9H9.5L8 7z"></path>
+                    </svg>
+                    Recent Rentals
+                </h3>
+            </div>
+            <div class="p-6">
+                <div class="space-y-3">
+                    {% for rental in recent_rentals %}
+                    <div class="flex items-start space-x-3">
+                        <div class="w-8 h-8 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg flex items-center justify-center">
+                            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3a4 4 0 118 0v4m-8 0h16l-1.5 9H9.5L8 7z"></path>
+                            </svg>
+                        </div>
+                        <div class="flex-1">
+                            <p class="text-sm font-medium text-gray-900">{{ rental.equipment.title|truncatechars:25 }}</p>
+                            <p class="text-xs text-gray-500">by {{ rental.renter.username }}</p>
+                            <p class="text-xs text-gray-500">{{ rental.created_at|timesince }} ago</p>
+                        </div>
+                        <div class="text-right">
+                            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium 
+                                {% if rental.status == 'confirmed' %}bg-blue-100 text-blue-800
+                                {% elif rental.status == 'active' %}bg-green-100 text-green-800
+                                {% elif rental.status == 'completed' %}bg-gray-100 text-gray-800
+                                {% else %}bg-yellow-100 text-yellow-800{% endif %}">
+                                {{ rental.status|title }}
+                            </span>
+                            <p class="text-xs text-gray-500 mt-1">${{ rental.total_amount|default:0 }}</p>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <p class="text-gray-500 text-sm">No recent rentals</p>
+                    {% endfor %}
+                </div>
+                <div class="mt-4">
+                    <a href="{% url 'admin_rentals' %}" class="text-sm font-medium text-purple-600 hover:text-purple-700">View all rentals →</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- System Status -->
+    <div class="mt-8 bg-white shadow-lg rounded-2xl border border-gray-200">
+        <div class="px-6 py-5 border-b border-gray-200">
+            <h3 class="text-lg font-semibold text-gray-900">System Status</h3>
+        </div>
+        <div class="p-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                <div class="text-center">
+                    <div class="inline-flex items-center justify-center w-12 h-12 bg-green-100 rounded-lg">
+                        <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                    </div>
+                    <p class="mt-2 text-sm font-medium text-gray-900">Database</p>
+                    <p class="text-xs text-green-600">Online</p>
+                </div>
+                <div class="text-center">
+                    <div class="inline-flex items-center justify-center w-12 h-12 bg-green-100 rounded-lg">
+                        <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                    </div>
+                    <p class="mt-2 text-sm font-medium text-gray-900">API</p>
+                    <p class="text-xs text-green-600">Healthy</p>
+                </div>
+                <div class="text-center">
+                    <div class="inline-flex items-center justify-center w-12 h-12 bg-green-100 rounded-lg">
+                        <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                    </div>
+                    <p class="mt-2 text-sm font-medium text-gray-900">Storage</p>
+                    <p class="text-xs text-green-600">85% Free</p>
+                </div>
+                <div class="text-center">
+                    <div class="inline-flex items-center justify-center w-12 h-12 bg-green-100 rounded-lg">
+                        <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                    </div>
+                    <p class="mt-2 text-sm font-medium text-gray-900">Payments</p>
+                    <p class="text-xs text-green-600">Processing</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// User Growth Chart
+const userGrowthData = {{ user_growth_data|safe }};
+const userCtx = document.getElementById('userGrowthChart').getContext('2d');
+new Chart(userCtx, {
+    type: 'line',
+    data: {
+        labels: userGrowthData.map(item => item.date),
+        datasets: [{
+            label: 'New Users',
+            data: userGrowthData.map(item => item.count),
+            borderColor: 'rgb(59, 130, 246)',
+            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+            tension: 0.3,
+            fill: true
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: {
+                display: false
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                ticks: {
+                    stepSize: 1
+                }
+            }
+        }
+    }
+});
+
+// Equipment by Category Chart
+const categoryData = {{ equipment_by_category|safe }};
+const categoryCtx = document.getElementById('categoryChart').getContext('2d');
+new Chart(categoryCtx, {
+    type: 'doughnut',
+    data: {
+        labels: categoryData.map(item => item.category__name || 'Uncategorized'),
+        datasets: [{
+            data: categoryData.map(item => item.count),
+            backgroundColor: [
+                'rgb(59, 130, 246)',
+                'rgb(16, 185, 129)',
+                'rgb(139, 92, 246)',
+                'rgb(245, 158, 11)',
+                'rgb(239, 68, 68)'
+            ]
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: {
+                position: 'bottom'
+            }
+        }
+    }
+});
+</script>
+{% endblock %}

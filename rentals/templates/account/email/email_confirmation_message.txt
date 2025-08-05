@@ -1,0 +1,47 @@
+🎮 Welcome to GameZone! 
+
+Hi {{ user.first_name|default:user.username }},
+
+Thank you for joining GameZone - the ultimate platform for gaming equipment rentals!
+
+To complete your registration and start {{ user.get_role_display|lower }} on our platform, please verify your email address by clicking the link below:
+
+🔗 VERIFICATION LINK:
+{{ activate_url }}
+
+Or copy and paste this URL into your browser:
+{{ activate_url }}
+
+What you can do as a {{ user.get_role_display }}:
+
+{% if user.is_customer %}
+✅ Browse thousands of gaming equipment
+✅ Rent equipment from verified vendors
+✅ Save favorites to your wishlist
+✅ Rate and review equipment
+✅ Track your rental history
+{% elif user.is_vendor %}
+✅ List your gaming equipment for rent
+✅ Manage rental requests and bookings
+✅ Track your earnings and analytics
+✅ Build your vendor reputation
+✅ Reach thousands of gamers
+{% endif %}
+
+⚡ Quick Details:
+📧 Email: {{ user.email }}
+👤 Role: {{ user.get_role_display }}
+📅 Registered: {{ user.date_joined|date:"F d, Y" }}
+
+🔒 This verification link will expire in {{ days }} days for security.
+
+Need help? Reply to this email or contact us at support@gamezone.com
+
+Welcome to the GameZone community!
+
+Best regards,
+The GameZone Team
+
+---
+GameZone - Rent. Play. Enjoy.
+This email was sent to {{ user.email }}

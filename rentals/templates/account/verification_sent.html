@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+
+{% block title %}Verification Email Sent{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <div class="sm:mx-auto sm:w-full sm:max-w-md">
+        <div class="flex justify-center">
+            <div class="w-16 h-16 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full flex items-center justify-center">
+                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                </svg>
+            </div>
+        </div>
+        <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
+            Check Your Email!
+        </h2>
+        <p class="mt-2 text-center text-sm text-gray-600">
+            We've sent a verification link to your email address
+        </p>
+    </div>
+
+    <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+        <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+            <div class="text-center space-y-6">
+                <!-- Email sent icon -->
+                <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-blue-100">
+                    <svg class="h-8 w-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                    </svg>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-medium text-gray-900">Verification Email Sent</h3>
+                    <p class="mt-2 text-sm text-gray-600">
+                        We've sent a verification email to <strong>{{ user.email }}</strong>.
+                        Please check your inbox and click the verification link to complete your registration.
+                    </p>
+                </div>
+
+                <!-- Development Mode Alert -->
+                <div class="bg-yellow-50 border border-yellow-200 rounded-md p-4">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <svg class="h-5 w-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                            </svg>
+                        </div>
+                        <div class="ml-3">
+                            <h3 class="text-sm font-medium text-yellow-800">Development Mode</h3>
+                            <div class="mt-2 text-sm text-yellow-700">
+                                <p>Since we're in development mode, the email content is printed to the console/terminal instead of being sent. Check your terminal window to see the verification link!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Instructions -->
+                <div class="bg-blue-50 border border-blue-200 rounded-md p-4">
+                    <h4 class="text-sm font-medium text-blue-800 mb-2">What to do next:</h4>
+                    <ol class="text-sm text-blue-700 list-decimal list-inside space-y-1">
+                        <li>Check your email inbox for our verification email</li>
+                        <li>Click the verification link in the email</li>
+                        <li>Return to this site and log in</li>
+                        <li>Start exploring GameZone!</li>
+                    </ol>
+                </div>
+
+                <!-- Action buttons -->
+                <div class="space-y-3">
+                    <form action="{% url 'resend_verification' %}" method="post" class="w-full">
+                        {% csrf_token %}
+                        <button type="submit" class="w-full flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500">
+                            Resend Verification Email
+                        </button>
+                    </form>
+                    
+                    <a href="{% url 'account_login' %}" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500">
+                        I've Already Verified - Login
+                    </a>
+                </div>
+
+                <!-- Help text -->
+                <div class="text-xs text-gray-500">
+                    <p>Didn't receive the email? Check your spam folder or try resending.</p>
+                    <p class="mt-1">Need help? <a href="mailto:support@gamezone.com" class="text-purple-600 hover:text-purple-500">Contact Support</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

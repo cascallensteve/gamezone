@@ -1,0 +1,261 @@
+{% extends 'admin/base.html' %}
+
+{% block title %}Sensor Detail - Admin Panel{% endblock %}
+
+{% block page_title %}Sensor Details{% endblock %}
+{% block page_description %}Monitor and manage sensor: {{ sensor.name }}{% endblock %}
+
+{% block content %}
+<div class="px-4 sm:px-6 lg:px-8">
+    <!-- Sensor Header -->
+    <div class="bg-white rounded-lg shadow mb-6">
+        <div class="px-6 py-4 border-b border-gray-200">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h3 class="text-lg font-medium text-gray-900">{{ sensor.name }}</h3>
+                    <p class="text-sm text-gray-500">{{ sensor.description }}</p>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <span class="inline-flex px-3 py-1 text-sm font-semibold rounded-full 
+                        {% if sensor.status == 'active' %}bg-green-100 text-green-800
+                        {% elif sensor.status == 'inactive' %}bg-gray-100 text-gray-800
+                        {% elif sensor.status == 'maintenance' %}bg-yellow-100 text-yellow-800
+                        {% else %}bg-red-100 text-red-800{% endif %}">
+                        {{ sensor.get_status_display }}
+                    </span>
+                    {% if sensor.is_online %}
+                        <span class="inline-flex items-center px-3 py-1 text-sm font-semibold rounded-full bg-green-100 text-green-800">
+                            <span class="w-2 h-2 bg-green-400 rounded-full mr-2"></span>
+                            Online
+                        </span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <!-- Sensor Actions -->
+        <div class="px-6 py-4">
+            <form method="post" class="flex items-center space-x-4">
+                {% csrf_token %}
+                <button type="submit" name="action" value="toggle_active" 
+                        class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    {% if sensor.is_active %}
+                        Deactivate Sensor
+                    {% else %}
+                        Activate Sensor
+                    {% endif %}
+                </button>
+                
+                <select name="status" class="px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    {% for status_code, status_name in sensor.STATUS_CHOICES %}
+                        <option value="{{ status_code }}" {% if sensor.status == status_code %}selected{% endif %}>
+                            {{ status_name }}
+                        </option>
+                    {% endfor %}
+                </select>
+                
+                <button type="submit" name="action" value="update_status" 
+                        class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    Update Status
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Sensor Information -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+        <!-- Basic Information -->
+        <div class="bg-white rounded-lg shadow">
+            <div class="px-6 py-4 border-b border-gray-200">
+                <h3 class="text-lg font-medium text-gray-900">Basic Information</h3>
+            </div>
+            <div class="px-6 py-4">
+                <dl class="grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-2">
+                    <div>
+                        <dt class="text-sm font-medium text-gray-500">Sensor Type</dt>
+                        <dd class="mt-1 text-sm text-gray-900">{{ sensor.get_sensor_type_display }}</dd>
+                    </div>
+                    <div>
+                        <dt class="text-sm font-medium text-gray-500">Equipment</dt>
+                        <dd class="mt-1 text-sm text-gray-900">
+                            {% if sensor.equipment %}
+                                <a href="{% url 'admin_equipment_detail' sensor.equipment.id %}" class="text-blue-600 hover:text-blue-900">
+                                    {{ sensor.equipment.title }}
+                                </a>
+                            {% else %}
+                                <span class="text-gray-500">Not assigned</span>
+                            {% endif %}
+                        </dd>
+                    </div>
+                    <div>
+                        <dt class="text-sm font-medium text-gray-500">Current Value</dt>
+                        <dd class="mt-1 text-sm text-gray-900">
+                            {% if sensor.current_value %}
+                                {{ sensor.current_value }} {% if sensor.unit %}{{ sensor.unit }}{% endif %}
+                            {% else %}
+                                <span class="text-gray-500">No data</span>
+                            {% endif %}
+                        </dd>
+                    </div>
+                    <div>
+                        <dt class="text-sm font-medium text-gray-500">Last Reading</dt>
+                        <dd class="mt-1 text-sm text-gray-900">
+                            {% if sensor.last_reading %}
+                                {{ sensor.last_reading|date:"M d, Y H:i" }}
+                            {% else %}
+                                <span class="text-gray-500">Never</span>
+                            {% endif %}
+                        </dd>
+                    </div>
+                    <div>
+                        <dt class="text-sm font-medium text-gray-500">Reading Interval</dt>
+                        <dd class="mt-1 text-sm text-gray-900">{{ sensor.reading_interval_minutes }} minutes</dd>
+                    </div>
+                    <div>
+                        <dt class="text-sm font-medium text-gray-500">Total Readings</dt>
+                        <dd class="mt-1 text-sm text-gray-900">{{ total_readings }}</dd>
+                    </div>
+                </dl>
+            </div>
+        </div>
+
+        <!-- Location Information -->
+        <div class="bg-white rounded-lg shadow">
+            <div class="px-6 py-4 border-b border-gray-200">
+                <h3 class="text-lg font-medium text-gray-900">Location & Configuration</h3>
+            </div>
+            <div class="px-6 py-4">
+                <dl class="grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-2">
+                    <div>
+                        <dt class="text-sm font-medium text-gray-500">Latitude</dt>
+                        <dd class="mt-1 text-sm text-gray-900">
+                            {% if sensor.latitude %}
+                                {{ sensor.latitude }}
+                            {% else %}
+                                <span class="text-gray-500">Not set</span>
+                            {% endif %}
+                        </dd>
+                    </div>
+                    <div>
+                        <dt class="text-sm font-medium text-gray-500">Longitude</dt>
+                        <dd class="mt-1 text-sm text-gray-900">
+                            {% if sensor.longitude %}
+                                {{ sensor.longitude }}
+                            {% else %}
+                                <span class="text-gray-500">Not set</span>
+                            {% endif %}
+                        </dd>
+                    </div>
+                    <div>
+                        <dt class="text-sm font-medium text-gray-500">Altitude</dt>
+                        <dd class="mt-1 text-sm text-gray-900">
+                            {% if sensor.altitude %}
+                                {{ sensor.altitude }}m
+                            {% else %}
+                                <span class="text-gray-500">Not set</span>
+                            {% endif %}
+                        </dd>
+                    </div>
+                    <div>
+                        <dt class="text-sm font-medium text-gray-500">Manufacturer</dt>
+                        <dd class="mt-1 text-sm text-gray-900">
+                            {% if sensor.manufacturer %}
+                                {{ sensor.manufacturer }}
+                            {% else %}
+                                <span class="text-gray-500">Not specified</span>
+                            {% endif %}
+                        </dd>
+                    </div>
+                    <div>
+                        <dt class="text-sm font-medium text-gray-500">Model Number</dt>
+                        <dd class="mt-1 text-sm text-gray-900">
+                            {% if sensor.model_number %}
+                                {{ sensor.model_number }}
+                            {% else %}
+                                <span class="text-gray-500">Not specified</span>
+                            {% endif %}
+                        </dd>
+                    </div>
+                    <div>
+                        <dt class="text-sm font-medium text-gray-500">Serial Number</dt>
+                        <dd class="mt-1 text-sm text-gray-900">
+                            {% if sensor.serial_number %}
+                                {{ sensor.serial_number }}
+                            {% else %}
+                                <span class="text-gray-500">Not specified</span>
+                            {% endif %}
+                        </dd>
+                    </div>
+                </dl>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Readings -->
+    <div class="bg-white rounded-lg shadow">
+        <div class="px-6 py-4 border-b border-gray-200">
+            <h3 class="text-lg font-medium text-gray-900">Recent Readings</h3>
+        </div>
+        
+        {% if sensor_readings %}
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Timestamp</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Value</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Unit</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Quality</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Alert</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        {% for reading in sensor_readings %}
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                    {{ reading.timestamp|date:"M d, Y H:i:s" }}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                    {{ reading.value }}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    {{ reading.unit|default:"-" }}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    {% if reading.quality_score %}
+                                        <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full 
+                                            {% if reading.quality_score >= 0.8 %}bg-green-100 text-green-800
+                                            {% elif reading.quality_score >= 0.6 %}bg-yellow-100 text-yellow-800
+                                            {% else %}bg-red-100 text-red-800{% endif %}">
+                                            {{ reading.quality_score|floatformat:2 }}
+                                        </span>
+                                    {% else %}
+                                        <span class="text-gray-500">-</span>
+                                    {% endif %}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    {% if reading.is_alert %}
+                                        <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">
+                                            Alert
+                                        </span>
+                                    {% else %}
+                                        <span class="text-gray-500">-</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="text-center py-12">
+                <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                </svg>
+                <h3 class="mt-2 text-sm font-medium text-gray-900">No readings available</h3>
+                <p class="mt-1 text-sm text-gray-500">This sensor hasn't recorded any readings yet.</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %} 

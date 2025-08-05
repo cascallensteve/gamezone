@@ -1,0 +1,185 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Sign In - GameZone{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <!-- Background Animation -->
+    <div class="absolute inset-0 overflow-hidden">
+        <div class="absolute -top-40 -right-40 w-80 h-80 rounded-full bg-purple-600 opacity-20 animate-pulse"></div>
+        <div class="absolute -bottom-40 -left-40 w-80 h-80 rounded-full bg-blue-600 opacity-20 animate-pulse animation-delay-1000"></div>
+        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-60 h-60 rounded-full bg-pink-600 opacity-10 animate-pulse animation-delay-2000"></div>
+    </div>
+
+    <div class="relative max-w-md w-full space-y-8">
+        <!-- Header -->
+        <div class="text-center">
+            <!-- Logo -->
+            <div class="mx-auto h-16 w-16 flex items-center justify-center rounded-full bg-gradient-to-r from-purple-600 to-pink-600 shadow-lg">
+                <svg class="h-8 w-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                </svg>
+            </div>
+            <h2 class="mt-6 text-3xl font-extrabold text-white">
+                Welcome Back
+            </h2>
+            <p class="mt-2 text-sm text-gray-300">
+                Sign in to your GameZone account
+            </p>
+            <p class="mt-1 text-sm text-gray-400">
+                New to GameZone?
+                <a href="{% url 'account_signup' %}" class="font-medium text-purple-400 hover:text-purple-300 transition-colors">
+                    Create your account →
+                </a>
+            </p>
+        </div>
+
+        <!-- Login Form -->
+        <div class="bg-white/10 backdrop-blur-md rounded-2xl shadow-2xl p-8 border border-white/20">
+            {% if form.errors or form.non_field_errors %}
+                <div class="mb-6 bg-red-500/20 border border-red-400 rounded-lg p-4">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <svg class="h-5 w-5 text-red-400" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+                            </svg>
+                        </div>
+                        <div class="ml-3">
+                            <h3 class="text-sm font-medium text-red-300">
+                                {% if form.non_field_errors %}
+                                    {{ form.non_field_errors|join:", " }}
+                                {% else %}
+                                    Please correct the errors below.
+                                {% endif %}
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+
+            <form method="post" class="space-y-6">
+                {% csrf_token %}
+                
+                <!-- Email Field -->
+                <div>
+                    <label for="id_username" class="block text-sm font-medium text-gray-200">
+                        Email Address
+                    </label>
+                    <div class="mt-1 relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"></path>
+                            </svg>
+                        </div>
+                        <input type="email" name="username" id="id_username" required class="form-input" placeholder="Enter your email address" value="{{ form.username.value|default:'' }}">
+                    </div>
+                    {% if form.username.errors %}
+                        <div class="mt-1">
+                            {% for error in form.username.errors %}
+                                <p class="text-sm text-red-400">{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Password Field -->
+                <div>
+                    <label for="id_password" class="block text-sm font-medium text-gray-200">
+                        Password
+                    </label>
+                    <div class="mt-1 relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                            </svg>
+                        </div>
+                        <input type="password" name="password" id="id_password" required class="form-input" placeholder="Enter your password">
+                    </div>
+                    {% if form.password.errors %}
+                        <div class="mt-1">
+                            {% for error in form.password.errors %}
+                                <p class="text-sm text-red-400">{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Remember Me & Forgot Password -->
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <input type="checkbox" name="remember" id="id_remember" class="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded bg-white/20">
+                        <label for="id_remember" class="ml-2 block text-sm text-gray-300">
+                            Remember me
+                        </label>
+                    </div>
+
+                    <div class="text-sm">
+                        <a href="{% url 'account_reset_password' %}" class="font-medium text-purple-400 hover:text-purple-300 transition-colors">
+                            Forgot your password?
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div>
+                    <button type="submit" class="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-all duration-300 transform hover:scale-105 shadow-lg">
+                        <span class="absolute left-0 inset-y-0 flex items-center pl-3">
+                            <svg class="h-5 w-5 text-purple-300 group-hover:text-purple-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path>
+                            </svg>
+                        </span>
+                        Sign In to GameZone
+                    </button>
+                </div>
+            </form>
+
+            <!-- Social Login Options (Future) -->
+            <div class="mt-6">
+                <div class="relative">
+                    <div class="absolute inset-0 flex items-center">
+                        <div class="w-full border-t border-gray-400"></div>
+                    </div>
+                    <div class="relative flex justify-center text-sm">
+                        <span class="px-2 bg-transparent text-gray-400">Quick access for testing</span>
+                    </div>
+                </div>
+
+                <div class="mt-4 text-center">
+                    <p class="text-xs text-gray-400">
+                        <strong>Demo Login:</strong> admin@gamezone.com (admin account)
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer Links -->
+        <div class="text-center">
+            <p class="text-sm text-gray-400">
+                By signing in, you agree to our
+                <a href="#" class="font-medium text-purple-400 hover:text-purple-300">Terms of Service</a>
+                and
+                <a href="#" class="font-medium text-purple-400 hover:text-purple-300">Privacy Policy</a>
+            </p>
+        </div>
+    </div>
+</div>
+
+<style>
+.animation-delay-1000 {
+    animation-delay: 1s;
+}
+.animation-delay-2000 {
+    animation-delay: 2s;
+}
+
+/* Custom form field styling */
+input[type="email"], input[type="password"], input[type="text"] {
+    @apply appearance-none relative block w-full pl-10 pr-3 py-3 border border-gray-300/30 placeholder-gray-400 text-white rounded-lg bg-white/10 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent focus:bg-white/20 transition-all duration-200;
+}
+
+input[type="checkbox"] {
+    @apply h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded bg-white/20;
+}
+</style>
+{% endblock %}

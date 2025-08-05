@@ -1,0 +1,229 @@
+{% extends 'base.html' %}
+
+{% block title %}List Your Equipment - Game Zone{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50">
+  <!-- Header -->
+  <div class="bg-white shadow">
+    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+      <h1 class="text-3xl font-bold text-gray-900">
+        List Your Gaming Equipment
+      </h1>
+      <p class="mt-1 text-sm text-gray-500">
+        Start earning money from your idle gaming gear
+      </p>
+    </div>
+  </div>
+
+  <div class="max-w-3xl mx-auto py-6 sm:px-6 lg:px-8">
+    <div class="bg-white shadow rounded-lg">
+      <form class="space-y-6 p-6">
+        <!-- Equipment Type -->
+        <div>
+          <label for="equipment-type" class="block text-sm font-medium text-gray-700">
+            Equipment Type
+          </label>
+          <select id="equipment-type" name="equipment-type" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm">
+            <option>Select equipment type...</option>
+            <option>Gaming PC/Desktop</option>
+            <option>Gaming Laptop</option>
+            <option>PlayStation Console</option>
+            <option>Xbox Console</option>
+            <option>Nintendo Console</option>
+            <option>VR Headset</option>
+            <option>Gaming Monitor</option>
+            <option>Gaming Chair</option>
+            <option>Gaming Accessories</option>
+            <option>Other</option>
+          </select>
+        </div>
+
+        <!-- Title -->
+        <div>
+          <label for="title" class="block text-sm font-medium text-gray-700">
+            Equipment Title
+          </label>
+          <input type="text" name="title" id="title" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm" placeholder="e.g., High-End Gaming PC with RTX 4080">
+        </div>
+
+        <!-- Description -->
+        <div>
+          <label for="description" class="block text-sm font-medium text-gray-700">
+            Description
+          </label>
+          <textarea id="description" name="description" rows="4" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm" placeholder="Describe your equipment, its specifications, condition, and any included accessories..."></textarea>
+        </div>
+
+        <!-- Specifications -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label for="brand" class="block text-sm font-medium text-gray-700">
+              Brand
+            </label>
+            <input type="text" name="brand" id="brand" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm" placeholder="e.g., ASUS, Sony, Microsoft">
+          </div>
+          <div>
+            <label for="model" class="block text-sm font-medium text-gray-700">
+              Model
+            </label>
+            <input type="text" name="model" id="model" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm" placeholder="e.g., ROG Strix, PlayStation 5">
+          </div>
+        </div>
+
+        <!-- Condition -->
+        <div>
+          <label for="condition" class="block text-sm font-medium text-gray-700">
+            Condition
+          </label>
+          <select id="condition" name="condition" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm">
+            <option>Excellent - Like new</option>
+            <option>Very Good - Minor wear</option>
+            <option>Good - Normal wear</option>
+            <option>Fair - Some wear but fully functional</option>
+          </select>
+        </div>
+
+        <!-- Photos -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700">
+            Photos
+          </label>
+          <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
+            <div class="space-y-1 text-center">
+              <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+              <div class="flex text-sm text-gray-600">
+                <label for="file-upload" class="relative cursor-pointer bg-white rounded-md font-medium text-primary hover:text-primary-500">
+                  <span>Upload photos</span>
+                  <input id="file-upload" name="file-upload" type="file" class="sr-only" multiple accept="image/*">
+                </label>
+                <p class="pl-1">or drag and drop</p>
+              </div>
+              <p class="text-xs text-gray-500">
+                PNG, JPG, GIF up to 10MB each (max 5 photos)
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pricing -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label for="daily-rate" class="block text-sm font-medium text-gray-700">
+              Daily Rate ($)
+            </label>
+            <div class="mt-1 relative rounded-md shadow-sm">
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <span class="text-gray-500 sm:text-sm">$</span>
+              </div>
+              <input type="number" name="daily-rate" id="daily-rate" class="pl-7 block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm" placeholder="25.00" min="1" step="0.01">
+            </div>
+          </div>
+          <div>
+            <label for="security-deposit" class="block text-sm font-medium text-gray-700">
+              Security Deposit ($)
+            </label>
+            <div class="mt-1 relative rounded-md shadow-sm">
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <span class="text-gray-500 sm:text-sm">$</span>
+              </div>
+              <input type="number" name="security-deposit" id="security-deposit" class="pl-7 block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm" placeholder="100.00" min="0" step="0.01">
+            </div>
+          </div>
+        </div>
+
+        <!-- Location -->
+        <div>
+          <label for="location" class="block text-sm font-medium text-gray-700">
+            Location
+          </label>
+          <input type="text" name="location" id="location" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm" placeholder="City, State">
+        </div>
+
+        <!-- Availability -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-3">
+            Availability Options
+          </label>
+          <div class="space-y-3">
+            <div class="flex items-center">
+              <input id="pickup" name="availability[]" type="checkbox" value="pickup" class="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded">
+              <label for="pickup" class="ml-2 text-sm text-gray-700">
+                Available for pickup
+              </label>
+            </div>
+            <div class="flex items-center">
+              <input id="delivery" name="availability[]" type="checkbox" value="delivery" class="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded">
+              <label for="delivery" class="ml-2 text-sm text-gray-700">
+                Available for delivery (additional fee may apply)
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Additional Information -->
+        <div>
+          <label for="additional-info" class="block text-sm font-medium text-gray-700">
+            Additional Information
+          </label>
+          <textarea id="additional-info" name="additional-info" rows="3" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm" placeholder="Any additional details, special instructions, or requirements..."></textarea>
+        </div>
+
+        <!-- Terms -->
+        <div class="bg-gray-50 p-4 rounded-md">
+          <div class="flex items-start">
+            <div class="flex items-center h-5">
+              <input id="terms" name="terms" type="checkbox" class="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded">
+            </div>
+            <div class="ml-3 text-sm">
+              <label for="terms" class="font-medium text-gray-700">
+                I agree to the Terms of Service and Community Guidelines
+              </label>
+              <p class="text-gray-500">
+                By listing your equipment, you agree to our terms and conditions, including equipment protection policies and user responsibilities.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Submit Buttons -->
+        <div class="flex justify-end space-x-3">
+          <button type="button" class="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
+            Save as Draft
+          </button>
+          <button type="submit" class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
+            Submit for Review
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Help Section -->
+    <div class="mt-6 bg-blue-50 border border-blue-200 rounded-md p-4">
+      <div class="flex">
+        <div class="flex-shrink-0">
+          <svg class="h-5 w-5 text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+          </svg>
+        </div>
+        <div class="ml-3">
+          <h3 class="text-sm font-medium text-blue-800">
+            Tips for a successful listing
+          </h3>
+          <div class="mt-2 text-sm text-blue-700">
+            <ul class="list-disc pl-5 space-y-1">
+              <li>Take high-quality photos from multiple angles</li>
+              <li>Be honest about the condition and any flaws</li>
+              <li>Include all specifications and included accessories</li>
+              <li>Research similar listings to set competitive pricing</li>
+              <li>Respond quickly to booking requests</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
