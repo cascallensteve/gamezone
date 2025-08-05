@@ -1,5 +1,5 @@
 #!/bin/bash
-# Build script for Vercel deployment
+# Build script for Render deployment
 
 # Install dependencies
 pip install -r requirements.txt
