@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: gamezone-backend
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn gamezone.wsgi:application
+    envVars:
+      - key: DATABASE_URL
+        value: postgresql://postgres:katCPTjldlGiZuNxYMZhwlSxPrHZEzaJ@centerbeam.proxy.rlwy.net:21318/railway
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: "False"
+      - key: EMAIL_HOST_USER
+        value: your-email@gmail.com
+      - key: EMAIL_HOST_PASSWORD
+        value: your-app-password
+      - key: PAYPAL_CLIENT_ID
+        value: your-paypal-client-id
+      - key: PAYPAL_CLIENT_SECRET
+        value: your-paypal-client-secret 

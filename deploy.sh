@@ -1,7 +1,7 @@
 #!/bin/bash
 
-echo "🚀 GameZone Vercel Deployment Script"
-echo "====================================="
+echo "🚀 GameZone Render Deployment Script"
+echo "===================================="
 
 # Check if git is initialized
 if [ ! -d ".git" ]; then
@@ -15,7 +15,7 @@ fi
 # Check if remote is set
 if ! git remote get-url origin > /dev/null 2>&1; then
     echo "❌ No remote repository found. Please add your GitHub repository:"
-    echo "   git remote add origin https://github.com/yourusername/yourrepo.git"
+    echo "   git remote add origin https://github.com/cascallensteve/terrys-project.git"
     exit 1
 fi
 
@@ -24,21 +24,27 @@ echo "✅ Git repository found"
 # Push to GitHub
 echo "📤 Pushing to GitHub..."
 git add .
-git commit -m "Deploy to Vercel - $(date)"
+git commit -m "Deploy to Render - $(date)"
 git push origin main
 
 echo "✅ Code pushed to GitHub"
 echo ""
 echo "🎯 Next Steps:"
-echo "1. Go to https://vercel.com"
-echo "2. Click 'New Project'"
-echo "3. Import your GitHub repository"
+echo "1. Go to https://render.com"
+echo "2. Click 'New Web Service'"
+echo "3. Connect your GitHub repository: cascallensteve/terrys-project"
 echo "4. Configure settings:"
-echo "   - Framework Preset: Other"
+echo "   - Name: gamezone-backend"
+echo "   - Environment: Python 3"
 echo "   - Root Directory: gamezone_env"
-echo "   - Build Command: pip install -r requirements.txt && python manage.py collectstatic --noinput"
-echo "   - Output Directory: staticfiles"
-echo "5. Add environment variables in Vercel dashboard"
+echo "   - Build Command: pip install -r requirements.txt"
+echo "   - Start Command: gunicorn gamezone.wsgi:application"
+echo "5. Add environment variables:"
+echo "   DATABASE_URL=postgresql://postgres:katCPTjldlGiZuNxYMZhwlSxPrHZEzaJ@centerbeam.proxy.rlwy.net:21318/railway"
+echo "   SECRET_KEY=your-secret-key"
+echo "   DEBUG=False"
+echo "   EMAIL_HOST_USER=your-email@gmail.com"
+echo "   EMAIL_HOST_PASSWORD=your-app-password"
 echo "6. Deploy!"
 echo ""
-echo "📖 See README_DEPLOYMENT.md for detailed instructions" 
+echo "📖 See RENDER_DEPLOYMENT_GUIDE.md for detailed instructions" 

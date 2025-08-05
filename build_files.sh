@@ -1,6 +1,9 @@
 #!/bin/bash
 # Build script for Render deployment with Railway database
 
+# Upgrade pip to latest version
+pip install --upgrade pip
+
 # Install dependencies
 pip install -r requirements.txt
 
